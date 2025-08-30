@@ -1,60 +1,37 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-	def __init__(self):
-		super().__init__()
-		player_walk_1 = pygame.image.load('graphics/player/charedi_walk_1.png').convert_alpha()
-		player_walk_2 = pygame.image.load('graphics/player/charedi_walk_2.png').convert_alpha()
-		self.player_down = pygame.image.load('graphics/player/charedi_down.png').convert_alpha()
-		
-		self.player_walk = [player_walk_1,player_walk_2]
-		self.player_index = 0
-		self.player_jump = pygame.image.load('graphics/player/charedi_walk_2.png').convert_alpha()
-		
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('assets/IcyTower.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (60, 60))  # מתאים גודל
+        self.rect = self.image.get_rect(midbottom=(100, 300))
 
-		self.image = self.player_walk[self.player_index]
-		
-		self.rect = self.image.get_rect(midbottom = (80,300))
-		self.gravity = 0
-		
-		self.jump_sound = pygame.mixer.Sound('audio/jump_sound1.mp3')
-		
-		self.is_down = False
+        # פיזיקה
+        self.gravity = 0
+        self.speed = 5
 
-	def player_input(self):
-		self.keys = pygame.key.get_pressed()
-		if self.keys[pygame.K_SPACE] and self.rect.bottom >= 300:
-			self.gravity = -20
-			self.jump_sound.play()
-			
-		if self.keys[pygame.K_DOWN]and self.rect.bottom >= 300:
-			self.is_down=True
-		else:
-			self.is_down= False
-		
-	def apply_gravity(self):
-		self.gravity += 1
-		self.rect.y += self.gravity
-		if self.rect.bottom >= 300:
-			self.rect.bottom = 300
+        # סאונד קפיצה
+        # self.jump_sound = pygame.mixer.Sound('audio/jump_sound1.mp3')
 
-	def animation_state(self):
-		if self.rect.bottom < 300: 
-			self.image = self.player_jump
-			
-		elif self.is_down:
-			self.image =self.player_down
-			self.rect.y += 40
-		 	
-		else:
-			
-			self.player_index += 0.1
-			if self.player_index >= len(self.player_walk):
-				self.player_index = 0
-			self.image = self.player_walk[int(self.player_index)]
+    def player_input(self):
+        keys = pygame.key.get_pressed()
+        # תנועה שמאלה/ימינה
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= self.speed
+        if keys[pygame.K_RIGHT]:
+            self.rect.x += self.speed
+        # קפיצה
+        if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
+            self.gravity = -20
+            # self.jump_sound.play()
 
-	def update(self):
-		self.player_input()
-		self.apply_gravity()
-		self.animation_state()
-		
+    def apply_gravity(self):
+        self.gravity += 1
+        self.rect.y += self.gravity
+        if self.rect.bottom >= 300:  # רצפה
+            self.rect.bottom = 300
+
+    def update(self):
+        self.player_input()
+        self.apply_gravity()
