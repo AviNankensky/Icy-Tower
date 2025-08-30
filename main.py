@@ -1,12 +1,13 @@
 import pygame
 import sys
 from Player import Player
+from Floor import Floor
 
 # --- אתחול pygame ---
 pygame.init()
 
 # --- יצירת חלון ---
-WIDTH, HEIGHT = 800
+WIDTH, HEIGHT = 800 , 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("המשחק שלי")
 
@@ -20,6 +21,10 @@ background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 player = pygame.sprite.GroupSingle()
 player.add(Player())
 
+# --- יצירת FLOOR ---
+floor = pygame.sprite.GroupSingle()
+floor.add(Floor(400, 600, 800, 100))
+
 # --- לולאת המשחק ---
 running = True
 while running:
@@ -30,8 +35,14 @@ while running:
     # ציור רקע
     screen.blit(background, (0, 0))
 
+    
     # עדכון וציור שחקן
-    player.update()
+    floor.draw(screen)
+
+
+    # עדכון וציור שחקן
+    player.update(floor)
+
     player.draw(screen)
 
     # עדכון המסך
