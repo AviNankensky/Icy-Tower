@@ -1,5 +1,7 @@
+import random
 import pygame
 import sys
+from PlatformBlock import PlatformBlock
 from Player import Player
 from Floor import Floor
 from Wall import Wall
@@ -39,6 +41,13 @@ def onRun():
         for floor_block in floor:
             floor_block.rect.y += scroll_amount
 
+        for platform in list(platformBlocks):
+            if platform.rect.top > HEIGHT + 50:  # אם ירדה מתחת למסך
+                platformBlocks.remove(platform)   # הסרה
+                # יצירת פלטפורמה חדשה למעלה
+                new_x = random.randint(50, WIDTH - 50)
+                new_y = random.randint(-100, -20)  # מעל המסך
+                platformBlocks.add(PlatformBlock(new_x, new_y))
 
 running = True
 while running:
