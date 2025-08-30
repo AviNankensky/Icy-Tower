@@ -7,7 +7,7 @@ from Floor import Floor
 pygame.init()
 
 # --- יצירת חלון ---
-WIDTH, HEIGHT = 800 , 600
+WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("המשחק שלי")
 
@@ -35,10 +35,8 @@ while running:
     # ציור רקע
     screen.blit(background, (0, 0))
 
-    
     # עדכון וציור שחקן
     floor.draw(screen)
-
 
     # עדכון וציור שחקן
     player.update(floor)

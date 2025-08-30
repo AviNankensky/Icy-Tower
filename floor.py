@@ -1,6 +1,8 @@
 import pygame
 
 # ====== מחלקת Floor (פלטפורמה) ======
+
+
 class Floor(pygame.sprite.Sprite):
     def __init__(self, x=100, y=300, width=60, height=60, color=(200, 200, 200)):
         super().__init__()
