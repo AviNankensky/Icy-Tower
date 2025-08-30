@@ -3,6 +3,7 @@ import sys
 from Player import Player
 from Floor import Floor
 from Wall import Wall
+from create_platforms import create_platforms  # הקפד להשתמש בשם הנכון
 
 pygame.init()
 WIDTH, HEIGHT = 800, 600
@@ -21,8 +22,22 @@ floor.add(Floor(400, 600, 800, 100))
 
 # קירות צדדיים
 walls = pygame.sprite.Group()
-walls.add(Wall(0, HEIGHT, HEIGHT))      # קיר שמאל
-walls.add(Wall(WIDTH, HEIGHT, HEIGHT))  # קיר ימין
+walls.add(Wall(0, HEIGHT, HEIGHT))      
+walls.add(Wall(WIDTH, HEIGHT, HEIGHT))  
+
+# יצירת פלטפורמות רנדומליות
+platformBlocks = create_platforms(num_platforms=10, width=100, height=20, screen_width=WIDTH, screen_height=HEIGHT)
+
+def onRun():
+    if player.sprite.rect.top < HEIGHT // 3:
+        scroll_amount = HEIGHT // 3 - player.sprite.rect.top
+        player.sprite.rect.top = HEIGHT // 3
+
+        # להזיז את כל הפלטפורמות
+        for platform in platformBlocks:
+            platform.rect.y += scroll_amount
+        for floor_block in floor:
+            floor_block.rect.y += scroll_amount
 
 
 running = True
@@ -34,9 +49,12 @@ while running:
     screen.blit(background, (0, 0))
     floor.draw(screen)
     walls.draw(screen)
+    platformBlocks.draw(screen)
 
-    player.update(floor, walls)
+    player.update(floor, walls, platformBlocks)
     player.draw(screen)
+
+    onRun()
 
     pygame.display.flip()
     clock.tick(60)
