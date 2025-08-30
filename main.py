@@ -1,35 +1,41 @@
 import pygame
 import sys
+from Player import Player
 
-# --- אתחול ספריית pygame ---
+# --- אתחול pygame ---
 pygame.init()
 
 # --- יצירת חלון ---
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("המשחק שלי")
 
-# --- משתנה לשליטה בקצב פריימים ---
 clock = pygame.time.Clock()
+
+# --- טעינת רקע ---
+background = pygame.image.load("assets/stoneWall.jpg")
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+
+# --- יצירת שחקן ---
+player = pygame.sprite.GroupSingle()
+player.add(Player())
 
 # --- לולאת המשחק ---
 running = True
 while running:
-    # טיפול באירועים (כמו יציאה)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # ניקוי המסך בצבע שחור (RGB)
-    screen.fill((0, 0, 0))
+    # ציור רקע
+    screen.blit(background, (0, 0))
 
-    # ציור דברים כאן...
-    # pygame.draw.rect(screen, (255, 0, 0), (100, 100, 50, 50))
+    # עדכון וציור שחקן
+    player.update()
+    player.draw(screen)
 
     # עדכון המסך
     pygame.display.flip()
-
-    # הגבלת FPS ל־60
     clock.tick(60)
 
 # --- סיום וסגירה ---
