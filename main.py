@@ -2,51 +2,44 @@ import pygame
 import sys
 from Player import Player
 from Floor import Floor
+from Wall import Wall
 
-# --- אתחול pygame ---
 pygame.init()
-
-# --- יצירת חלון ---
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("המשחק שלי")
-
 clock = pygame.time.Clock()
 
-# --- טעינת רקע ---
 background = pygame.image.load("assets/stoneWall.jpg")
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
-# --- יצירת שחקן ---
 player = pygame.sprite.GroupSingle()
 player.add(Player())
 
-# --- יצירת FLOOR ---
-floor = pygame.sprite.GroupSingle()
+floor = pygame.sprite.Group()
 floor.add(Floor(400, 600, 800, 100))
 
-# --- לולאת המשחק ---
+# קירות צדדיים
+walls = pygame.sprite.Group()
+walls.add(Wall(0, HEIGHT, HEIGHT))      # קיר שמאל
+walls.add(Wall(WIDTH, HEIGHT, HEIGHT))  # קיר ימין
+
+
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # ציור רקע
     screen.blit(background, (0, 0))
-
-    # עדכון וציור שחקן
     floor.draw(screen)
+    walls.draw(screen)
 
-    # עדכון וציור שחקן
-    player.update(floor)
-
+    player.update(floor, walls)
     player.draw(screen)
 
-    # עדכון המסך
     pygame.display.flip()
     clock.tick(60)
 
-# --- סיום וסגירה ---
 pygame.quit()
 sys.exit()
