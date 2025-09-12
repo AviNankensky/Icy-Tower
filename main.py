@@ -3,7 +3,7 @@ import pygame
 import sys
 from PlatformBlock import PlatformBlock
 from Player import Player
-from Floor import Floor
+from floor import Floor
 from Wall import Wall
 from create_platforms import create_platforms  # הקפד להשתמש בשם הנכון
 
@@ -68,9 +68,9 @@ while running:
     player.update(floor, walls, platformBlocks)
     player.draw(screen)
 
-
-    player2.draw(screen)
-    player2In.updatePos(player2In.getX(),player2In.getY() - 1)
+    # example of player 2
+    # player2.draw(screen)
+    # player2In.updatePos(player2In.getX(),player2In.getY() - 1)
 
     onRun()
 
