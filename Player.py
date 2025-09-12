@@ -1,8 +1,7 @@
 import pygame
-from client import updatePlayer2ToServer
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,isMyPlayer=False):
+    def __init__(self, isMyPlayer=False, network_sender=None):
         super().__init__()
         self.image = pygame.image.load('assets/IcyTower.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (60, 60))
@@ -12,6 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0
         self.speed = 5
         self.isMyPlayer = isMyPlayer
+        self.network_sender = network_sender
 
     def player_input(self, walls):
         keys = pygame.key.get_pressed()
@@ -29,12 +29,16 @@ class Player(pygame.sprite.Sprite):
             self.gravity = -20
 
     def updatePosToSocket(self):
-        if(self.prevX == self.rect.x or self.PrevY == self.rect.y):
+        # Only send if position has actually changed
+        if self.prevX == self.rect.x and self.PrevY == self.rect.y:
             return
+        
         self.PrevY = self.rect.y  
         self.prevX = self.rect.x
-        print("pos x = ",self.rect.x, "pos Y = ",self.rect.y)
-        updatePlayer2ToServer(self.rect.x,self.rect.y)
+
+        if self.network_sender:
+            pos_data = {"x": self.rect.x, "y": self.rect.y}
+            self.network_sender(pos_data)
 
     def apply_gravity(self, floors, platforms):
         self.gravity += 1
@@ -53,7 +57,7 @@ class Player(pygame.sprite.Sprite):
                     self.gravity = 0
 
     def update(self, floors, walls, platforms):
-        if(self.isMyPlayer):
+        if self.isMyPlayer:
             self.player_input(walls)
             self.apply_gravity(floors, platforms)
             self.updatePosToSocket()
