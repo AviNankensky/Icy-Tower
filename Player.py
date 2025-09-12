@@ -1,4 +1,5 @@
 import pygame
+from client import updatePlayer2ToServer
 
 class Player(pygame.sprite.Sprite):
     def __init__(self,isMyPlayer=False):
@@ -33,6 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.PrevY = self.rect.y  
         self.prevX = self.rect.x
         print("pos x = ",self.rect.x, "pos Y = ",self.rect.y)
+        updatePlayer2ToServer(self.rect.x,self.rect.y)
 
     def apply_gravity(self, floors, platforms):
         self.gravity += 1

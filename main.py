@@ -54,6 +54,9 @@ def onRun():
                 new_y = random.randint(-100, -20)  # מעל המסך
                 platformBlocks.add(PlatformBlock(new_x, new_y))
 
+def updatePlayer2(x , y):
+    player2In.updatePos(x,y)
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -69,7 +72,7 @@ while running:
     player.draw(screen)
 
     # example of player 2
-    # player2.draw(screen)
+    player2.draw(screen)
     # player2In.updatePos(player2In.getX(),player2In.getY() - 1)
 
     onRun()
