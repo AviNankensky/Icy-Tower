@@ -30,7 +30,7 @@ def send_messages(client_socket):
 
 def main():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(('127.0.0.1', 9999))
+    client.connect(('192.168.1.240', 9999))
 
     receive_thread = threading.Thread(target=receive_messages, args=(client,))
     receive_thread.start()

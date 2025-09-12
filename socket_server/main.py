@@ -29,7 +29,7 @@ def handle_client(client_socket):
 def main():
     global clients
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(('0.0.0.0', 9999))
+    server.bind(('192.168.1.240', 9999))
     server.listen(5)
     print("Server listening on port 9999")
 
