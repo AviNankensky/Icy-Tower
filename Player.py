@@ -1,14 +1,16 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,isMyPlayer=False):
         super().__init__()
         self.image = pygame.image.load('assets/IcyTower.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect(midbottom=(100, 400))
-
+        self.prevX = self.rect.x
+        self.PrevY = self.rect.y
         self.gravity = 0
         self.speed = 5
+        self.isMyPlayer = isMyPlayer
 
     def player_input(self, walls):
         keys = pygame.key.get_pressed()
@@ -16,27 +18,32 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -= self.speed
             for wall in walls:
                 if self.rect.colliderect(wall.rect):
-                    self.rect.left = wall.rect.right  # חוסם מעבר שמאלה
+                    self.rect.left = wall.rect.right 
         if keys[pygame.K_RIGHT]:
             self.rect.x += self.speed
             for wall in walls:
                 if self.rect.colliderect(wall.rect):
-                    self.rect.right = wall.rect.left  # חוסם מעבר ימינה
+                    self.rect.right = wall.rect.left 
         if keys[pygame.K_SPACE] and self.gravity == 0:
             self.gravity = -20
+
+    def updatePosToSocket(self):
+        if(self.prevX == self.rect.x or self.PrevY == self.rect.y):
+            return
+        self.PrevY = self.rect.y  
+        self.prevX = self.rect.x
+        print("pos x = ",self.rect.x, "pos Y = ",self.rect.y)
 
     def apply_gravity(self, floors, platforms):
         self.gravity += 1
         self.rect.y += self.gravity
 
-        # בדיקת קוליז׳ן עם הרצפה
         for floor in floors:
             if self.rect.colliderect(floor.rect):
                 if self.gravity > 0 and self.rect.bottom - self.gravity <= floor.rect.top:
                     self.rect.bottom = floor.rect.top
                     self.gravity = 0
 
-        # בדיקת קוליז׳ן עם פלטפורמות
         for platform in platforms:
             if self.rect.colliderect(platform.rect):
                 if self.gravity > 0 and self.rect.bottom - self.gravity <= platform.rect.top:
@@ -44,5 +51,16 @@ class Player(pygame.sprite.Sprite):
                     self.gravity = 0
 
     def update(self, floors, walls, platforms):
-        self.player_input(walls)
-        self.apply_gravity(floors, platforms)
+        if(self.isMyPlayer):
+            self.player_input(walls)
+            self.apply_gravity(floors, platforms)
+            self.updatePosToSocket()
+
+    def updatePos(self,PosX,PosY):
+        self.rect.x = PosX
+        self.rect.y = PosY
+
+    def getX(self):
+        return self.rect.x
+    def getY(self):
+        return self.rect.y

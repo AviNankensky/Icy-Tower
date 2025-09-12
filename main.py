@@ -17,7 +17,12 @@ background = pygame.image.load("assets/stoneWall.jpg")
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 player = pygame.sprite.GroupSingle()
-player.add(Player())
+player.add(Player(True))
+
+player2In = Player(False)
+player2 = pygame.sprite.GroupSingle()
+player2.add(player2In)
+
 
 floor = pygame.sprite.Group()
 floor.add(Floor(400, 600, 800, 100))
@@ -62,6 +67,10 @@ while running:
 
     player.update(floor, walls, platformBlocks)
     player.draw(screen)
+
+
+    player2.draw(screen)
+    player2In.updatePos(player2In.getX(),player2In.getY() - 1)
 
     onRun()
 
